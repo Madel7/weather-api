@@ -2,11 +2,11 @@
 <html>
   <head>
     <title>OSW</title>
-    <link rel="icon"  href="Penguin.png">
+    <link rel="icon" href="Penguin.png" />
     <style>
       body {
         margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         height: 100vh;
         display: flex;
         justify-content: center;
@@ -16,11 +16,11 @@
         background-position: center;
         transition: background-image 0.5s ease-in-out;
         overflow: hidden;
-        background-image: url("default.png");
+        background-image: url('default.png');
       }
 
       body::before {
-        content: "";
+        content: '';
         position: absolute;
         width: 100%;
         height: 100%;
@@ -93,7 +93,7 @@
   <body>
     <div class="container">
       <h1 style="color: orange; font-size: 50px">OSW</h1>
-      <h1><span style="color: rgb(255, 204, 109);">🌤</span> Weather App</h1>
+      <h1><span style="color: rgb(255, 204, 109)">🌤</span> Weather App</h1>
 
       <div>
         <input type="text" id="cityInput" placeholder="Enter city..." />
@@ -104,28 +104,46 @@
     </div>
 
     <script>
+      const images = [
+        'default.png',
+        'sunny.png',
+        'cloudy.png',
+        'rainy.png',
+        'night.png',
+        'night_rainy.png',
+        'cold.png',
+        'night_hot.png',
+      ];
+
+      images.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+      });
+      
       async function getWeather() {
-        const city = document.getElementById("cityInput").value.trim();
+        const city = document.getElementById('cityInput').value.trim();
 
         if (!city) {
-          alert("Please enter a city name!");
+          alert('Please enter a city name!');
           return;
         }
 
         try {
-          const res = await fetch(`https://weather-api-production-e2df.up.railway.app/weather?city=${city}`);
+          const res = await fetch(
+            `https://weather-api-production-e2df.up.railway.app/weather?city=${city}`,
+          );
 
           if (!res.ok) {
-            const errorData = await res.json(); 
-            alert(errorData.message || "City not found!");
-            document.getElementById("weatherBox").innerHTML = ""; 
+            const errorData = await res.json();
+            alert(errorData.message || 'City not found!');
+            document.getElementById('weatherBox').innerHTML = '';
             document.body.style.backgroundImage = "url('default.png')";
             return;
           }
 
           const data = await res.json();
 
-          document.getElementById("weatherBox").innerHTML = `
+          document.getElementById('weatherBox').innerHTML = `
       <h2>${city}</h2>
       <p>${data.description}</p>
       <p>🌡 Temp: ${data.temperature} °C</p>
@@ -136,8 +154,8 @@
           setBackground(data);
         } catch (err) {
           console.error(err);
-          alert("Failed to fetch weather. Please try again!");
-          document.getElementById("weatherBox").innerHTML = "";
+          alert('Failed to fetch weather. Please try again!');
+          document.getElementById('weatherBox').innerHTML = '';
           document.body.style.backgroundImage = "url('default.png')";
         }
       }
@@ -147,30 +165,30 @@
         const rain = data.rainProbability;
         const temp = parseFloat(data.temperature);
 
-        const [hours, minutes] = data.time.split(":").map(Number);
+        const [hours, minutes] = data.time.split(':').map(Number);
         const time = hours + minutes / 60;
 
         let timeState;
 
-        if (time >= 6.5 && time < 17) timeState = "day";
+        if (time >= 6.5 && time < 17) timeState = 'day';
         else if ((time >= 17 && time < 18.5) || (time >= 5 && time < 6.5))
-          timeState = "sunset";
-        else timeState = "night";
+          timeState = 'sunset';
+        else timeState = 'night';
 
-        let bg = "default.png";
+        let bg = 'default.png';
 
-        if (rain > 75 && timeState === "sunset") bg = "rainy.png";
-        else if (rain > 75 && timeState === "day") bg = "sunny.png";
-        else if (rain > 75 && timeState === "night") bg = "night_rainy.png";
+        if (rain > 75 && timeState === 'sunset') bg = 'rainy.png';
+        else if (rain > 75 && timeState === 'day') bg = 'sunny.png';
+        else if (rain > 75 && timeState === 'night') bg = 'night_rainy.png';
         else if (
-          (rain < 75 && desc.includes("cloud")) ||
-          timeState === "sunset"
+          (rain < 75 && desc.includes('cloud')) ||
+          timeState === 'sunset'
         )
-          bg = "cloudy.png";
-        else if (temp < 15 && timeState === "day") bg = "cold.png";
-        else if (temp < 15 && timeState === "night") bg = "night.png";
-        else if (temp >= 15 && timeState === "day") bg = "sunny.png";
-        else if (temp >= 15 && timeState === "night") bg = "night_hot.png";
+          bg = 'cloudy.png';
+        else if (temp < 15 && timeState === 'day') bg = 'cold.png';
+        else if (temp < 15 && timeState === 'night') bg = 'night.png';
+        else if (temp >= 15 && timeState === 'day') bg = 'sunny.png';
+        else if (temp >= 15 && timeState === 'night') bg = 'night_hot.png';
 
         document.body.style.backgroundImage = `url('${bg}')`;
       }
