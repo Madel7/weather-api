@@ -5,12 +5,12 @@ import Redis from 'ioredis';
 export class RedisService {
   private redis: Redis;
 
- constructor() {
+  constructor() {
     this.redis = new Redis({
-      host: 'https://infinite-rat-38605.upstash.io',          // مثال: infinite-rat-38605.upstash.io
-      port: 6379, // مثال: 6379
-      password: 'ApbNAAIgcDFY7N68tYO6utEevDt0zVKCdEka1Rrafwi8UDCv2Qj1sQ',   // الـ Token أو Readonly Token
-      tls: {},                                // لازم لأن SSL مفعل
+      host: process.env.REDIS_HOST,            
+      port: 6379,  
+      password: process.env.REDIS_PASSWORD,    
+      tls: {},                                  
     });
   }
 

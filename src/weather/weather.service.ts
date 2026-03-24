@@ -21,7 +21,7 @@ export class WeatherService {
     }
 
     //weather-api
-    const apiKey = '884U52W4M8DV58CRDMPQFNYNQ';
+    const apiKey = process.env.WEATHER_API_KEY;
 
     try {
       const response: any = await firstValueFrom(
