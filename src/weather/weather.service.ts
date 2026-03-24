@@ -37,6 +37,9 @@ export class WeatherService {
     const Celsius = (f: number) => ((f - 32) * 5 / 9).toFixed(1);
 
     const weather = {
+      city:city,
+      time: response.data.currentConditions.datetime,
+      timezone: response.data.timezone,
       description: now.description,
       temperature: Celsius(now.temp),
       maxTemperature: Celsius(now.tempmax),
@@ -45,9 +48,9 @@ export class WeatherService {
       rainProbability: now.precipprob,
     };
 
-    //store in cache for 12 hour
+    //store in cache for 2 minutes instead of 12 hours, updated.
     const cacheObj = { weather, allData };
-    await this.redisService.set(cacheKey, JSON.stringify(cacheObj), 43200);
+    await this.redisService.set(cacheKey, JSON.stringify(cacheObj), 120);
 
     return full ? allData : weather;
 
